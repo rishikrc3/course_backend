@@ -69,7 +69,7 @@ app.post("/admin/login", (req, res) => {
 //making a course route
 app.post("/admin/courses", authenticateJwt, (req, res) => {
   const course = req.body;
-  courseId = COURSES.length + 1;
+  course.id = COURSES.length + 1;
   COURSES.push(course);
   res.json({
     message: "Course created succesfull",
@@ -77,10 +77,42 @@ app.post("/admin/courses", authenticateJwt, (req, res) => {
   });
 });
 
+//editing a specific course
+
+app.put("/admin/courses/:courseId", authenticateJwt, (req, res) => {
+  const courseId = parseInt(req.params.courseId);
+
+  const courseIndex = COURSES.findIndex((c) => c.id === courseId);
+
+  if (courseIndex > -1) {
+    const updatedCourse = { ...COURSES[courseIndex], ...req.body };
+    COURSES[courseIndex] = updatedCourse;
+    res.json({ message: "Course updated successfully" });
+  } else {
+    res.status(404).json({ message: "Course not found" });
+  }
+});
+
 //accesing all courses
 app.get("/admin/courses", authenticateJwt, (req, res) => {
   res.json({ courses: COURSES });
 });
+
+//USER ROUTES
+
+app.post("/users/signup", (req, res) => {
+  const user = req.body;
+  const existingUser = USERS.find((u) => u.username === user.username);
+
+  if (existingUser) {
+    res.status(403).json({ message: "User already exists" });
+  } else {
+    USERS.push(user);
+    const token = generateJwt(user);
+    res.json({ message: "User created succesfully", token });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
