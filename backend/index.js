@@ -132,7 +132,7 @@ app.post("/users/login", (req, res) => {
 app.get("/users/courses", authenticateJwt, (req, res) => {
   res.json({ courses: COURSES });
 });
-
+//purchsing a course
 app.post("/users/courses/:courseId", authenticateJwt, (req, res) => {
   const course = COURSES.find((c) => c.id === parseInt(req.params.courseId));
   if (course) {
@@ -149,6 +149,15 @@ app.post("/users/courses/:courseId", authenticateJwt, (req, res) => {
     }
   } else {
     res.status(404).json({ message: "Course not found" });
+  }
+});
+//
+app.get("/users/purchasedCourses", authenticateJwt, (req, res) => {
+  const user = USERS.find((u) => u.username === req.user.username);
+  if (user) {
+    res.json({ purchasedCourses: user.purchasedCourses || [] });
+  } else {
+    res.status(403).json({ message: "User not found" });
   }
 });
 app.listen(port, () => {
