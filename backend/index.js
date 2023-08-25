@@ -7,10 +7,28 @@ let USERS = [];
 let COURSES = [];
 
 const secretKey = "Rishik";
-
+//JWT
 const generateJwt = (user) => {
   const payload = { username: user.username };
   return jwt.sign(payload, secretKey, { expiresIn: "1h" });
+};
+
+const authenticateJwt = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, secretKey, (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
 };
 
 app.use(express.json());
@@ -18,6 +36,8 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+//admin routes
+//adming singup
 app.post("/admin/signup", (req, res) => {
   const admin = req.body;
   const existingAdmin = ADMINS.find((a) => a.username == admin.username);
@@ -30,6 +50,8 @@ app.post("/admin/signup", (req, res) => {
     res.json({ message: "Admin created succesfully", token });
   }
 });
+
+//admin login
 app.post("/admin/login", (req, res) => {
   const { username, password } = req.headers;
   const admin = ADMINS.find(
@@ -42,6 +64,22 @@ app.post("/admin/login", (req, res) => {
   } else {
     res.status(403).json({ message: "Amin authentication failed" });
   }
+});
+
+//making a course route
+app.post("/admin/courses", authenticateJwt, (req, res) => {
+  const course = req.body;
+  courseId = COURSES.length + 1;
+  COURSES.push(course);
+  res.json({
+    message: "Course created succesfull",
+    courseId: course.id,
+  });
+});
+
+//accesing all courses
+app.get("/admin/courses", authenticateJwt, (req, res) => {
+  res.json({ courses: COURSES });
 });
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
