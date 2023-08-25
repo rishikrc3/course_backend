@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const jwt = require("jsonwebtoken");
 let ADMINS = [];
 let USERS = [];
 let COURSES = [];
@@ -18,7 +19,7 @@ app.post("/admin/signup", (req, res) => {
     res.status(403).json({ message: "Admin already exists" });
   } else {
     ADMINS.push(admin);
-    res.json({ message: "Adming created succesfully" });
+    res.json({ message: "Admin created succesfully" });
   }
 });
 
