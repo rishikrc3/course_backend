@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 let ADMINS = [];
 let USERS = [];
 let COURSES = [];
+const fs = require("fs");
 
 const secretKey = "Rishik";
 //JWT
@@ -113,7 +114,7 @@ app.post("/users/signup", (req, res) => {
     res.json({ message: "User created succesfully", token });
   }
 });
-
+//user login
 app.post("/users/login", (req, res) => {
   const { username, password } = req.headers;
   const user = USERS.find(
@@ -128,6 +129,28 @@ app.post("/users/login", (req, res) => {
   }
 });
 
+app.get("/users/courses", authenticateJwt, (req, res) => {
+  res.json({ courses: COURSES });
+});
+
+app.post("/users/courses/:courseId", authenticateJwt, (req, res) => {
+  const course = COURSES.find((c) => c.id === parseInt(req.params.courseId));
+  if (course) {
+    const user = USERS.find((u) => u.username === req.user.username);
+    if (user) {
+      if (!user.purchasedCourses) {
+        user.purchasedCourses = [];
+      }
+      user.purchasedCourses.push(course);
+      fs.writeFileSync("users.json", JSON.stringify(USERS));
+      res.json({ message: "Course purchased successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } else {
+    res.status(404).json({ message: "Course not found" });
+  }
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
