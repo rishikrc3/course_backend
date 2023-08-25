@@ -100,6 +100,7 @@ app.get("/admin/courses", authenticateJwt, (req, res) => {
 
 //USER ROUTES
 
+//signup
 app.post("/users/signup", (req, res) => {
   const user = req.body;
   const existingUser = USERS.find((u) => u.username === user.username);
@@ -110,6 +111,20 @@ app.post("/users/signup", (req, res) => {
     USERS.push(user);
     const token = generateJwt(user);
     res.json({ message: "User created succesfully", token });
+  }
+});
+
+app.post("/users/login", (req, res) => {
+  const { username, password } = req.headers;
+  const user = USERS.find(
+    (u) => u.username === username && u.password === password
+  );
+
+  if (user) {
+    const token = generateJwt(user);
+    res.json({ message: "Logged in sucessfully", token });
+  } else {
+    res.status(403).json({ message: "Invalid Username" });
   }
 });
 
