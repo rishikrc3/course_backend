@@ -17,6 +17,7 @@ const SECRET = "Secret";
 const userSchema = new mongoose.Schema({
   username: { type: String },
   password: { type: String },
+  purchasedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 });
 
 const adminSchema = new mongoose.Schema({
@@ -118,7 +119,7 @@ app.put("/admin/courses/:courseId", authenticateJwt, async (req, res) => {
 //USER ROUTES
 
 //user signup
-app.post("/user/signup", async (req, res) => {
+app.post("/users/signup", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (user) {
@@ -134,7 +135,7 @@ app.post("/user/signup", async (req, res) => {
 });
 
 //user login
-app.post("/user/login", async (req, res) => {
+app.post("/users/login", async (req, res) => {
   const { username, password } = req.headers;
   const user = await User.findOne({ username, password });
 
@@ -149,11 +150,38 @@ app.post("/user/login", async (req, res) => {
 });
 
 //getting all courses
-app.get("/user/courses", authenticateJwt, async (req, res) => {
+app.get("/users/courses", authenticateJwt, async (req, res) => {
   const courses = await Course.find({ published: true });
   res.json({ courses });
 });
+//buying courses
+app.post("/users/courses/:courseId", authenticateJwt, async (req, res) => {
+  const course = await Course.findById(req.params.courseId);
+  console.log(course);
+  if (course) {
+    const user = await User.findOne({ username: req.user.username });
+    if (user) {
+      user.purchasedCourses.push(course);
+      await user.save();
+      res.json({ message: "Course purchased successfully" });
+    } else {
+      res.status(403).json({ message: "User not found" });
+    }
+  } else {
+    res.status(404).json({ message: "Course not found" });
+  }
+});
 
+app.get("/users/purchasedCourses", authenticateJwt, async (req, res) => {
+  const user = await User.findOne({ username: req.user.username }).populate(
+    "purchasedCourses"
+  );
+  if (user) {
+    res.json({ purchasedCourses: user.purchasedCourses || [] });
+  } else {
+    res.status(403).json({ message: "User not found" });
+  }
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
