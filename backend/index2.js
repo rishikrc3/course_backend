@@ -104,6 +104,17 @@ app.get("/admin/courses", async (req, res) => {
   res.json({ courses });
 });
 
+//updating an existing course using the mongodb id
+app.put("/admin/courses/:courseId", authenticateJwt, async (req, res) => {
+  const course = await Course.findByIdAndUpdate(req.params.courseId, req.body, {
+    new: true,
+  });
+  if (course) {
+    res.json({ message: "Course updated successfully" });
+  } else {
+    res.status(404).json({ message: "Course not found" });
+  }
+});
 //USER ROUTES
 
 //user signup
@@ -137,10 +148,12 @@ app.post("/user/login", async (req, res) => {
   }
 });
 
+//getting all courses
 app.get("/user/courses", authenticateJwt, async (req, res) => {
   const courses = await Course.find({ published: true });
   res.json({ courses });
 });
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
