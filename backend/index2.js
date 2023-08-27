@@ -98,6 +98,42 @@ app.post("/admin/courses", async (req, res) => {
   await course.save();
   res.json({ message: "Course created succesfully", courseId: course.id });
 });
+
+app.get("/admin/courses", async (req, res) => {
+  const courses = await Course.find({});
+  res.json({ courses });
+});
+
+//USER ROUTES
+
+app.post("/user/signup", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (user) {
+    res.json({ message: "User already exists" });
+  } else {
+    const newUser = new User({ username: username, password: password });
+    await newUser.save();
+    const token = jwt.sign({ username, role: "user" }, SECRET, {
+      expiresIn: "1h",
+    });
+    res.json({ message: "User created succesfully", token });
+  }
+});
+
+app.post("/user/login", async (req, res) => {
+  const { username, password } = req.headers;
+  const user = await User.findOne({ username, password });
+
+  if (user) {
+    const token = jwt.sign({ username: username, role: "user" }, SECRET, {
+      expiresIn: "1h",
+    });
+    res.json({ message: "Logged in succesfully" });
+  } else {
+    res.json({ message: "Invalid username or password" });
+  }
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
