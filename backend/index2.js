@@ -106,6 +106,7 @@ app.get("/admin/courses", async (req, res) => {
 
 //USER ROUTES
 
+//user signup
 app.post("/user/signup", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
@@ -121,6 +122,7 @@ app.post("/user/signup", async (req, res) => {
   }
 });
 
+//user login
 app.post("/user/login", async (req, res) => {
   const { username, password } = req.headers;
   const user = await User.findOne({ username, password });
@@ -129,10 +131,15 @@ app.post("/user/login", async (req, res) => {
     const token = jwt.sign({ username: username, role: "user" }, SECRET, {
       expiresIn: "1h",
     });
-    res.json({ message: "Logged in succesfully" });
+    res.json({ message: "Logged in succesfully", token });
   } else {
     res.json({ message: "Invalid username or password" });
   }
+});
+
+app.get("/user/courses", authenticateJwt, async (req, res) => {
+  const courses = await Course.find({ published: true });
+  res.json({ courses });
 });
 // Start the server
 app.listen(port, () => {
