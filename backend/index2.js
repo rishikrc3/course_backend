@@ -119,6 +119,7 @@ app.put("/admin/courses/:courseId", authenticateJwt, async (req, res) => {
 //USER ROUTES
 
 //user signup
+
 app.post("/users/signup", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });

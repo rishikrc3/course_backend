@@ -1,4 +1,4 @@
-
+import Signup from "./Signup"
 
 function App() {
  
@@ -6,6 +6,8 @@ function App() {
   return (
     <>
       <h1>Hemlo</h1>
+      <Signup></Signup>
+      
     </>
   )
 }
