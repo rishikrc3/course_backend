@@ -42,7 +42,22 @@ const Signup = () => {
           />
           <br />
           <br />
-          <Button size={"large"} variant="contained">
+          <Button
+            size={"large"}
+            variant="contained"
+            onClick={() => {
+              console.log(email);
+              console.log(password);
+
+              fetch("http://localhost:3000/admin/signup", {
+                method: "POST",
+                body: JSON.stringify({
+                  email,
+                  password,
+                }),
+              });
+            }}
+          >
             {" "}
             Signup
           </Button>

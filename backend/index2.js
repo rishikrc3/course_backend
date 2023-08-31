@@ -1,5 +1,5 @@
 //This is used to connect to a mongo database
-
+const cors = require("cors");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
@@ -12,6 +12,7 @@ app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
 
+app.use(cors());
 const SECRET = "Secret";
 
 const userSchema = new mongoose.Schema({
