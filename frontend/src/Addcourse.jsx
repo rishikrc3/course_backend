@@ -3,11 +3,13 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Card } from "@mui/material";
 import { useState } from "react";
+import Checkbox from "@mui/material/Checkbox";
 const Addcourse = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [price, setPrice] = useState(0);
+  const [isChecked, setIsChecked] = useState(false);
   return (
     <div
       style={{
@@ -40,8 +42,31 @@ const Addcourse = () => {
             fullWidth={true}
             label="Description"
             variant="outlined"
-            type={"password"}
           />
+          <TextField
+            style={{ marginBottom: 10 }}
+            onChange={(e) => {
+              setImage(e.target.value);
+            }}
+            fullWidth={true}
+            label="Image link"
+            variant="outlined"
+          />
+          <TextField
+            style={{ marginBottom: 10 }}
+            onChange={(e) => {
+              setPrice(e.target.value);
+            }}
+            fullWidth={true}
+            label="Price"
+            variant="outlined"
+          />
+          {/* <Checkbox
+            checked={isChecked}
+            onChange={(e) => setIsChecked(e.target.checked)}
+            color="primary"
+          />
+          <label>Published</label> */}
           <Button
             size={"large"}
             variant="contained"
@@ -51,8 +76,8 @@ const Addcourse = () => {
                 body: JSON.stringify({
                   title: title,
                   description: description,
-                  price: 0,
-                  image: "",
+                  price: price,
+                  image: image,
                   published: true,
                 }),
                 headers: {
