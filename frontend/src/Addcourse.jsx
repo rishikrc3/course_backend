@@ -31,7 +31,6 @@ const Addcourse = () => {
             fullWidth={true}
             label="Title"
             variant="outlined"
-            type={"password"}
           />
           <TextField
             style={{ marginBottom: 10 }}
@@ -43,7 +42,26 @@ const Addcourse = () => {
             variant="outlined"
             type={"password"}
           />
-          <Button size={"large"} variant="contained">
+          <Button
+            size={"large"}
+            variant="contained"
+            onClick={() => {
+              fetch("http://localhost:3000/admin/courses", {
+                method: "POST",
+                body: JSON.stringify({
+                  title: title,
+                  description: description,
+                  price: 0,
+                  image: "",
+                  published: true,
+                }),
+                headers: {
+                  "Content-type": "application/json",
+                  Authorization: "Bearer" + localStorage.getItem("token"),
+                },
+              });
+            }}
+          >
             {" "}
             Add the course
           </Button>
