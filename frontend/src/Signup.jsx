@@ -46,16 +46,25 @@ const Signup = () => {
             size={"large"}
             variant="contained"
             onClick={() => {
+              function callback2(data) {
+                localStorage.setItem("token", data.token);
+              }
+              function callback1(res) {
+                res.json().then(callback2);
+              }
               console.log(email);
               console.log(password);
-
+              let username = email;
               fetch("http://localhost:3000/admin/signup", {
                 method: "POST",
                 body: JSON.stringify({
-                  email,
+                  username,
                   password,
                 }),
-              });
+                headers: {
+                  "Content-type": "application/json",
+                },
+              }).then(callback1);
             }}
           >
             {" "}
