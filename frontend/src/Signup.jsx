@@ -54,12 +54,12 @@ const Signup = () => {
               }
               console.log(email);
               console.log(password);
-              let username = email;
+
               fetch("http://localhost:3000/admin/signup", {
                 method: "POST",
                 body: JSON.stringify({
-                  username,
-                  password,
+                  username: email,
+                  password: password,
                 }),
                 headers: {
                   "Content-type": "application/json",
