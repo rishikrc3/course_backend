@@ -103,13 +103,13 @@ app.post("/admin/login", async (req, res) => {
     res.status(403).json({ message: "invalid username or password" });
   }
 });
-app.post("/admin/courses", async (req, res) => {
+app.post("/admin/courses", authenticateJwt, async (req, res) => {
   const course = new Course(req.body);
   await course.save();
   res.json({ message: "Course created succesfully", courseId: course.id });
 });
 
-app.get("/admin/courses", async (req, res) => {
+app.get("/admin/courses", authenticateJwt, async (req, res) => {
   const courses = await Course.find({});
   res.json({ courses });
 });
