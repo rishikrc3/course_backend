@@ -52,8 +52,6 @@ const Signup = () => {
               function callback1(res) {
                 res.json().then(callback2);
               }
-              console.log(email);
-              console.log(password);
 
               fetch("http://localhost:3000/admin/signup", {
                 method: "POST",

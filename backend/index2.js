@@ -67,6 +67,14 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
+app.get("/admin/me", authenticateJwt, (req, res) => {
+  res.json({
+    username: req.user.username,
+  });
+});
+
+//ADMIN ROUTES
+
 app.post("/admin/signup", async (req, res) => {
   const { username, password } = req.body;
   const admin = await Admin.findOne({ username });
