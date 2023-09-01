@@ -63,7 +63,7 @@ app.post("/admin/login", (req, res) => {
     const token = generateJwt(admin);
     res.json({ message: "Logged in succesfully", token });
   } else {
-    res.status(403).json({ message: "Amin authentication failed" });
+    res.status(403).json({ message: "Admin authentication failed" });
   }
 });
 
