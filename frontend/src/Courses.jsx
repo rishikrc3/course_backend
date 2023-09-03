@@ -23,7 +23,6 @@ const Courses = () => {
     <div
       style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
     >
-      Courses
       {/* {JSON.stringify(courses)} */}
       {courses.map((course) => {
         return <Course course={course} />;
