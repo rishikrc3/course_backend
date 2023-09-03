@@ -9,7 +9,7 @@ const Addcourse = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [price, setPrice] = useState(0);
-  const [isChecked, setIsChecked] = useState(false);
+
   return (
     <div
       style={{
@@ -61,12 +61,6 @@ const Addcourse = () => {
             label="Price"
             variant="outlined"
           />
-          {/* <Checkbox
-            checked={isChecked}
-            onChange={(e) => setIsChecked(e.target.checked)}
-            color="primary"
-          />
-          <label>Published</label> */}
           <Button
             size={"large"}
             variant="contained"
