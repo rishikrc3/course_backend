@@ -1,6 +1,7 @@
 import { Button, Card, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   useEffect(() => {
@@ -31,6 +32,34 @@ const Courses = () => {
   );
 };
 export function Course({ course }) {
-  return <div>{course.description}</div>;
+  const navigate = useNavigate();
+  return (
+    <Card
+      style={{
+        margin: 10,
+        width: 300,
+        minHeight: 200,
+        padding: 20,
+      }}
+    >
+      <Typography textAlign={"center"} variant="h5">
+        {course.title}
+      </Typography>
+      <Typography textAlign={"center"} variant="subtitle1">
+        {course.description}
+      </Typography>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => {
+            navigate("/course/" + course._id);
+          }}
+        >
+          Edit
+        </Button>
+      </div>
+    </Card>
+  );
 }
 export default Courses;
