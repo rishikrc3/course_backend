@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Typography, TextField, Button } from "@mui/material";
 const Course = () => {
   let { courseId } = useParams();
   function callback2(data) {
@@ -17,7 +18,7 @@ const Course = () => {
       },
     }).then(callback1);
   }, []);
-  return <></>;
+  return <>{courseId}</>;
 };
 
 export default Course;
