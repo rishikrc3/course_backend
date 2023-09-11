@@ -7,6 +7,7 @@ let USERS = [];
 let COURSES = [];
 const fs = require("fs");
 
+//Samrat
 const secretKey = "Rishik";
 //JWT
 const generateJwt = (user) => {
